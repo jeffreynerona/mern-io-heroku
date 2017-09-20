@@ -1,255 +1,143 @@
-![](http://res.cloudinary.com/hashnode/image/upload/w_200/v1466495663/static_imgs/mern/v2/mernio-logo.png)
+# Deploying mern.io project to Heroku
+[![status|inprogress](http://jeffreynerona.com/badges/status-inprogress.svg)](http://jeffreynerona.com/projects) [![type|practice-project](http://jeffreynerona.com/badges/type-practiceproject.svg)](http://jeffreynerona.com/projects/) [![language|ruby](http://jeffreynerona.com/badges/language-javascript.svg)](http://jeffreynerona.com/projects/javascript)
 
-# mern-starter
-![title](https://travis-ci.org/Hashnode/mern-starter.svg?branch=v2.0.0)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![Discuss on Hashnode](
-https://hashnode.github.io/badges/mern.svg)](https://hashnode.com/n/mern)
+A simple tutorial on deploying a MERN (MongoDB - Express - React - Node) app generated with mern.io.
 
-
-MERN is a scaffolding tool which makes it easy to build isomorphic apps using Mongo, Express, React and NodeJS. It minimises the setup time and gets you up to speed using proven technologies.
-
-- [Website](http://mern.io)
-- [Documentation](http://mern.io/documentation.html)
-- [Discussions](https://hashnode.com/n/mern)
-
-## Quickstart
-
+## package.json
+Modify your start script to production:
 ```
-  npm install -g mern-cli
-  mern init your_new_app
-  cd your_new_app
-  npm install
-  npm start
+"start": "cross-env NODE_ENV=production node index.js"
 ```
-
-**Note : Please make sure your MongoDB is running.** For MongoDB installation guide see [this](https://docs.mongodb.org/v3.0/installation/). Also `npm3` is required to install dependencies properly.
-
-## Available Commands
-
-1. `npm run start` - starts the development server with hot reloading enabled
-
-2. `npm run bs` - bundles the code and starts the production server
-
-3. `npm run test` - start the test runner
-
-4. `npm run watch:test` - start the test runner with watch mode
-
-5. `npm run cover` - generates test coverage report
-
-6. `npm run lint` - runs linter to check for lint errors
-
-## File Structure
-
-### Webpack Configs
-
-MERN uses Webpack for bundling modules. There are four types of Webpack configs provided `webpack.config.dev.js` (for development), `webpack.config.prod.js` (for production), `webpack.config.server.js` (for bundling server in production) and `webpack.config.babel.js` (for [babel-plugin-webpack-loaders](https://github.com/istarkov/babel-plugin-webpack-loaders) for server rendering of assets included through webpack).
-
-The Webpack configuration is minimal and beginner-friendly. You can customise and add more features to it for production build.
-
-### Server
-
-MERN uses express web framework. Our app sits in server.js where we check for NODE_ENV.
-
-If NODE_ENV is development, we apply Webpack middlewares for bundling and Hot Module Replacement.
-
-#### Server Side Rendering
-
-We use React Router's match function for handling all page requests so that browser history works.
-
-All the routes are defined in `client/routes.js`. React Router renders components according to route requested.
-
-```js
-// Server Side Rendering based on routes matched by React-router.
-app.use((req, res) => {
-    match({
-        routes,
-        location: req.url
-    }, (err, redirectLocation, renderProps) => {
-        if (err) {
-            return res.status(500).end('Internal server error');
-        }
-
-        if (!renderProps) {
-            return res.status(404).end('Not found!');
-        }
-
-        const initialState = {
-            posts: [],
-            post: {}
-        };
-
-        const store = configureStore(initialState);
-
-        fetchComponentData(store.dispatch, renderProps.components, renderProps.params).then(() => {
-            const initialView = renderToString(
-                <Provider store = {store} >
-                  <RouterContext {...renderProps}/>
-                </Provider>
-            );
-
-            const finalState = store.getState();
-
-            res.status(200).end(renderFullPage(initialView, finalState));
-        }).catch(() => {
-            res.end(renderFullPage('Error', {}));
-        });
-    });
-});
+Copy your devDependencies to dependencies:
+```
+"dependencies": {
+    "babel-core": "^6.9.1",
+    "body-parser": "^1.15.1",
+    "compression": "^1.6.2",
+    "cross-env": "^1.0.8",
+    "cuid": "^1.3.8",
+    "express": "^4.13.4",
+    "intl": "^1.2.4",
+    "intl-locales-supported": "^1.0.0",
+    "isomorphic-fetch": "^2.2.1",
+    "limax": "^1.3.0",
+    "mongoose": "^4.4.20",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-helmet": "^3.1.0",
+    "react-intl": "^2.1.2",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.4.1",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
+    "sanitize-html": "^1.11.4",
+    "ava": "^0.15.2",
+    "babel-eslint": "^6.0.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-webpack-loaders": "^0.7.0",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-es2015-native-modules": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-react-optimize": "^1.0.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.9.0",
+    "chai": "^3.5.0",
+    "chunk-manifest-webpack-plugin": "0.1.0",
+    "coveralls": "^2.11.9",
+    "css-loader": "^0.23.1",
+    "css-modules-require-hook": "^4.0.1",
+    "cssnano": "^3.7.0",
+    "enzyme": "^2.3.0",
+    "eslint": "^2.11.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-ava": "^2.4.0",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.3.0",
+    "eslint-plugin-react": "^5.1.1",
+    "eventsource-polyfill": "^0.9.6",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "jsdom": "^9.2.1",
+    "json-loader": "^0.5.4",
+    "mock-css-modules": "^1.0.0",
+    "mockgoose": "^6.0.3",
+    "nock": "^8.0.0",
+    "nodemon": "^1.9.2",
+    "null-loader": "^0.1.1",
+    "nyc": "^6.4.4",
+    "postcss-cssnext": "^2.6.0",
+    "postcss-focus": "^1.0.0",
+    "postcss-loader": "^0.9.1",
+    "postcss-reporter": "^1.3.3",
+    "pre-commit": "^1.1.3",
+    "react-addons-test-utils": "^15.1.0",
+    "react-hot-loader": "^3.0.0-beta.2",
+    "redux-ava": "^2.0.0",
+    "redux-devtools": "^3.3.1",
+    "redux-devtools-dock-monitor": "^1.1.1",
+    "redux-devtools-log-monitor": "^1.0.11",
+    "rimraf": "^2.5.2",
+    "sinon": "^1.17.4",
+    "style-loader": "^0.13.1",
+    "supertest": "^1.2.0",
+    "url-loader": "^0.5.7",
+    "webpack": "2.1.0-beta.8",
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-server": "^2.1.0-beta.0",
+    "webpack-externals-plugin": "^1.0.0",
+    "webpack-hot-middleware": "^2.10.0",
+    "webpack-manifest-plugin": "^1.0.1"
+  },
 ```
 
-`match` takes two parameters, first is an object that contains routes, location and history and second is a callback function which is called when routes have been matched to a location.
-
-If there's an error in matching we return 500 status code, if no matches are found we return 404 status code. If a match is found then, we need to create a new Redux Store instance.
-
-**Note:** A new Redux Store has populated afresh on every request.
-
-`fetchComponentData` is the essential function. It takes three params: first is a dispatch function of Redux store, the second is an array of components that should be rendered in current route and third is the route params. `fetchComponentData` collects all the needs (need is an array of actions that are required to be dispatched before rendering the component) of components in the current route. It returns a promise when all the required actions are dispatched. We render the page and send data to the client for client-side rendering in `window.__INITIAL_STATE__`.
-
-### Client
-
-Client directory contains all the shared components, routes, modules.
-
-#### components
-This folder contains all the common components which are used throughout the project.
-
-#### index.js
-Index.js simply does client side rendering using the data provided from `window.__INITIAL_STATE__`.
-
-#### modules
-Modules are the way of organising different domain-specific modules in the project. A typical module contains the following
+## server/config.js
+Add your Cloud MongoDB url
+it usually starts with: 'mongodb://.......'
 ```
-| - Post
-  | - __tests__ // all the tests for this module goes here
-      | - components // Sub components of this module
-          | - Post.spec.js
-          | - PostList.spec.js
-          | - PostItem.spec.js
-          | - PostImage.spec.js
-      | - pages
-          | - PostPage.spec.js
-          | - PostViewPage.spec.js
-      | - PostReducer.spec.js
-      | - PostActions.spec.js
-  | - components // Sub components of this module
-      | - Post.js
-      | - PostList.js
-      | - PostItem.js
-      | - PostImage.js
-  | - pages // React Router Pages from this module
-      | - PostPage
-          | - PostPage.js
-          | - PostPage.css
-      | - PostViewPage
-          | - PostViewPage.js
-          | - PostViewPage.css
-  | - PostReducer.js
-  | - PostActions.js
+const config = {
+  mongoURL: process.env.MONGO_URL || 'your_mongo_url_here',
+  port: process.env.PORT || 8000,
+};
+
+export default config;
+```
+## .gitignore
+Unignore `public/*` and `dist`
+```
+.DS_Store
+node_modules/
+npm-debug.log
+.idea/
+dump.rdb
+.vscode/
+public/*
+dist
+coverage/
+.nyc_output/
+```
+## Build
+Build the client part:
+```
+npm run build
+```
+Build the server part:
+```
+npm run build:server
 ```
 
-## Misc
+## Deploy to Heroku
+Go to https://dashboard.heroku.com/apps/ and create a new app.<br>
+There are several ways to deploy like Heroku CLI or Github, here I'll be using Gtihub.
 
-### Importing Assets
-Assets can be kept where you want and can be imported into your js files or css files. Those fill be served by webpack in development mode and copied to the dist folder during production.
-
-### ES6 support
-We use babel to transpile code in both server and client with `stage-0` plugin. So, you can use both ES6 and experimental ES7 features.
-
-### Docker
-There are docker configurations for both development and production.
-
-To run docker for development,
+Go to your project and push it to github:
 ```
-docker-compose -f docker-compose-development.yml build
-docker-compose -f docker-compose-development.yml up
+git init
+git add .
+git commit -n -m "initial commit"
+git remote add origin "your-github-repository-link"
+git push -u origin master
 ```
-
-To run docker for production,
-```
-docker-compose build
-docker-compose up
-```
-
-### Make your MERN
-In this version, we enabled the `mern-cli` to clone not only this project but also the variants of `mern-starter` like one project with MaterialUI or JWT auth. To make your version of MERN, follow these steps
-
-1. Clone this project
-    ```
-    git clone https://github.com/Hashnode/mern-starter
-    ```
-
-2. Make your changes. Add a package, add authentication, modify the file structure, replace Redux with MobX or anything else.
-
-3. In this version, we also added code generators. Blueprints for those generators are located at `config/blueprints`, and config is located at `mern.json`. Make sure to edit them if necessary after your made modifications in the previous step. There is a section below which explains how to modify generators.
-
-4. Next clone `mern-cli` project
-    ```
-    git clone https://github.com/Hashnode/mern-cli
-    ```
-
-5. Add your project details to `variants.json` in the cloned project and send a pull request.
-
-### Modifying Generators
-
-#### mern.json
-It contains a blueprints array. Each object in it is the config for a generator. A blueprint config contains the name, description, usage, and files array. An example blueprint config
-```
-{
-  "name": "dumb-s",
-  "description": "Generates a dumb react component in shared components",
-  "usage": "dumb-s [component-name]",
-  "files": [
-    {
-      "blueprint-path": "config/blueprints/dumb-component.ejs",
-      "target-path": "client/components/<%= helpers.capitalize(name) %>.js"
-    }
-  ]
-}
-```
-
-A file object contains
-
-1. `blueprint-path` - location of the blueprint file
-
-2. `target-path` - location where the file should be generated
-
-3. `parent-path` - optional parameter, used if you want to generate the file inside an already existing folder in your project.
-
-Also, `target-path` supports [ejs](https://github.com/mde/ejs) and the following variables will be passed while rendering,
-
-1. `name` - `<component-name>` input from user
-
-2. `parent` - in particular special cases where you need to generate files inside an already existing folder, you can obtain this parent variable from the user. A config using that will look like,
-    ```
-    {
-      "name": "dumb-m",
-      "description": "Generates a dumb react component in a module directory",
-      "usage": "dumb-m <module-name>/<component-name>",
-      "files": [
-        {
-          "blueprint-path": "config/blueprints/dumb-component.ejs",
-          "parent-path": "client/modules/<%= helpers.capitalize(parent) %>",
-          "target-path": "components/<%= helpers.capitalize(name) %>/<%= helpers.capitalize(name) %>.js"
-        }
-      ]
-    }
-    ```
-    Here, notice the usage. In `<module-name>/<component-name>`, `<module-name>` will be passed as `parent` and `<component-name>` will be passed as `<name>`.
-
-3. `helpers` - an helper object is passed which include common utility functions. For now, it contains `capitalize`. If you want to add more, send a PR to [mern-cli](https://github.com/Hashnode/mern-cli).
-
-#### Blueprint files
-Blueprints are basically [ejs](https://github.com/mde/ejs) templates which are rendered with the same three variables(`name`, optional `parent` and `helpers` object) as above.
-
-### Caveats
-
-#### FOUC (Flash of Unstyled Content)
-To make the hot reloading of CSS work, we are not extracting CSS in development. Ideally, during server rendering, we will be extracting CSS, and we will get a .css file, and we can use it in the html template. That's what we are doing in production.
-
-In development, after all scripts get loaded, react loads the CSS as BLOBs. That's why there is a second of FOUC in development.
-
-#### Client and Server Markup Mismatch
-This warning is visible only on development and totally harmless. This occurs to hash difference in `react-router`. To solve it, react router docs asks you to use `match` function. If we use `match`, `react-hot-reloader` stops working.
-
-## License
-MERN is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+Go to your new heroku app and Deploy with github.<br>
+Finally, run your app... Here's mine: https://mern-io-heroku.herokuapp.com/
+# The End
