@@ -94,7 +94,7 @@ Copy your devDependencies to dependencies:
 ## server/config.js
 Add your Cloud MongoDB url<br>
 it usually starts with: 'mongodb://.......'<br>
-If you don't have one yet, once choice is https://cloud.mongodb.com<br>
+If you don't have one yet, one choice is https://cloud.mongodb.com<br>
 Create a new cluster and get your link... Be sure to update the password in your link.
 ```
 const config = {
