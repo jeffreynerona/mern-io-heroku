@@ -113,8 +113,6 @@ npm-debug.log
 .idea/
 dump.rdb
 .vscode/
-public/*
-dist
 coverage/
 .nyc_output/
 ```
